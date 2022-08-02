@@ -27,7 +27,7 @@ public class UsersController {
                     defaultValue = "10", required = true) Integer size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        Page<User> userPaginated = userService.findAllUsersPagination(pageable);
+        Page<User> userPaginated = userService.doFindAllUsersPagination(pageable);
 
         MetaResponseDto metaResponse = MetaResponseDto.builder()
                 .count(userPaginated.getSize())
@@ -42,5 +42,13 @@ public class UsersController {
                 .build();
 
         return new ResponseEntity<>(userListPage, HttpStatus.OK);
+    }
+
+    @PostMapping("users")
+    public ResponseEntity<Object> createNewUsers(@RequestBody User userPayload) {
+        BaseResponseDto userCreated = BaseResponseDto.builder()
+                .data(userService.doCreateNewUsers(userPayload))
+                .build();
+        return new ResponseEntity<>(userCreated, HttpStatus.CREATED);
     }
 }

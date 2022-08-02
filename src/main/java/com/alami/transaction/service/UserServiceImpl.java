@@ -13,7 +13,12 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    public Page<User> findAllUsersPagination(Pageable pageable) {
+    public Page<User> doFindAllUsersPagination(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    @Override
+    public User doCreateNewUsers(User user) {
+        return userRepository.save(user);
     }
 }
