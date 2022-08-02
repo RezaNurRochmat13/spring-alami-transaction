@@ -44,11 +44,21 @@ public class UsersController {
         return new ResponseEntity<>(userListPage, HttpStatus.OK);
     }
 
+    @GetMapping("users/{id}")
+    public ResponseEntity findUserByIds(@PathVariable Long id) {
+        BaseResponseDto userById = BaseResponseDto.builder()
+                .data(userService.doCreateNewUsers(userService.doFindUserById(id)))
+                .build();
+
+        return new ResponseEntity<>(userById, HttpStatus.OK);
+    }
+
     @PostMapping("users")
     public ResponseEntity<Object> createNewUsers(@RequestBody User userPayload) {
         BaseResponseDto userCreated = BaseResponseDto.builder()
                 .data(userService.doCreateNewUsers(userPayload))
                 .build();
+
         return new ResponseEntity<>(userCreated, HttpStatus.CREATED);
     }
 }

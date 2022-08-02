@@ -7,4 +7,5 @@ import org.springframework.data.domain.Pageable;;
 public interface UserService {
     Page<User> doFindAllUsersPagination(Pageable pageable);
     User doCreateNewUsers(User user);
+    User doFindUserById(Long id);
 }

@@ -2,6 +2,7 @@ package com.alami.transaction.service;
 
 import com.alami.transaction.entity.User;
 import com.alami.transaction.repository.UserRepository;
+import com.alami.transaction.util.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,5 +21,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User doCreateNewUsers(User user) {
         return userRepository.save(user);
+    }
+
+    @Override
+    public User doFindUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID : " + id));
     }
 }
