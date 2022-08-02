@@ -1,5 +1,7 @@
 package com.alami.transaction.controller;
 
+import com.alami.transaction.dto.BaseResponseDto;
+import com.alami.transaction.dto.MetaResponseDto;
 import com.alami.transaction.entity.User;
 import com.alami.transaction.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +20,27 @@ public class UsersController {
     UserServiceImpl userService;
 
     @GetMapping("users")
-    public ResponseEntity<Object> findAllPaginatedUsers(@RequestParam(value = "page", defaultValue = "0", required = true) Integer page,
-                                                                @RequestParam(value = "size", defaultValue = "10", required = true) Integer size) {
+    public ResponseEntity<Object> findAllPaginatedUsers(
+            @RequestParam(value = "page",
+            defaultValue = "0", required = true) Integer page,
+            @RequestParam(value = "size",
+                    defaultValue = "10", required = true) Integer size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Page<User> userPaginated = userService.findAllUsersPagination(pageable);
 
-        return new ResponseEntity<>(userPaginated, HttpStatus.OK);
+        MetaResponseDto metaResponse = MetaResponseDto.builder()
+                .count(userPaginated.getSize())
+                .total(userPaginated.getTotalElements())
+                .page(page)
+                .currentPage(userPaginated.getNumber())
+                .build();
+
+        BaseResponseDto userListPage = BaseResponseDto.builder()
+                .data(userPaginated.getContent())
+                .meta(metaResponse)
+                .build();
+
+        return new ResponseEntity<>(userListPage, HttpStatus.OK);
     }
 }
