@@ -1,7 +1,19 @@
 package com.alami.transaction.service;
 
+import com.alami.transaction.entity.User;
+import com.alami.transaction.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService {
+    @Autowired
+    UserRepository userRepository;
+
+    @Override
+    public Page<User> findAllUsersPagination(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
 }
