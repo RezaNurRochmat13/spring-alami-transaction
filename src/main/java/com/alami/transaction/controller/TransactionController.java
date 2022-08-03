@@ -16,6 +16,12 @@ public class TransactionController {
 
     @PostMapping("transactions")
     public ResponseEntity<Object> createNewTransaction(@RequestBody Transaction payload) {
-        return new ResponseEntity<>(transactionService.doSaveTransaction(payload), HttpStatus.CREATED);
+        Transaction transaction = transactionService.doSaveTransaction(payload);
+
+        if(transaction != null) {
+            return new ResponseEntity<>(transaction, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Not enough balance", HttpStatus.BAD_REQUEST);
+        }
     }
 }
