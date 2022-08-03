@@ -30,4 +30,7 @@ public class Transaction extends AuditModel implements Serializable {
     @Column(name = "transaction_amount")
     @JsonProperty("transaction_amount")
     private Long transactionAmount;
+
+    @Column(name = "status")
+    private String status;
 }

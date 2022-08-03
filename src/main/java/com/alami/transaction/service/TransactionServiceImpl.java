@@ -28,15 +28,30 @@ public class TransactionServiceImpl implements TransactionService {
         User user = userRepository.findById(transactionPayload.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID : "
                         + transactionPayload.getUserId()));
-        Transaction transaction = null;
+        Transaction transaction;
 
         try {
             if(user.getBalance() == 0) {
                 throw new NotEnoughBalanceException("Not enough balance");
-            } else {
+            } else if(transactionPayload.getStatus().equals("withdraw")) {
+                logger.info("Transaction status : " + transactionPayload.getStatus());
+                logger.info("Payload transaction : " + transactionPayload);
+
                 transactionPayload.setUserId(user.getId());
                 user.setBalance(user.getBalance() - transactionPayload.getTransactionAmount());
                 transaction = transactionRepository.save(transactionPayload);
+
+                logger.info("Transaction record : " + transaction);
+                return transaction;
+            } else if(transactionPayload.getStatus().equals("topup")) {
+                logger.info("Transaction status : " + transactionPayload.getStatus());
+                logger.info("Payload transaction : " + transactionPayload);
+
+                transactionPayload.setUserId(user.getId());
+                user.setBalance(user.getBalance() + transactionPayload.getTransactionAmount());
+                transaction = transactionRepository.save(transactionPayload);
+
+                logger.info("Transaction record : " + transaction);
                 return transaction;
             }
 
@@ -44,5 +59,7 @@ public class TransactionServiceImpl implements TransactionService {
             logger.error(e.getMessage());
             return null;
         }
+
+        return null;
     }
 }
