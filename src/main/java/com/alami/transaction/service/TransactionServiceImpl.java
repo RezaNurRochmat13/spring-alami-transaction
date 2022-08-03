@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,6 +78,35 @@ public class TransactionServiceImpl implements TransactionService {
 
 
         for(Transaction userTransaction: transactions) {
+            UserTransactionDto userTransactionDto = UserTransactionDto.builder()
+                    .id(userTransaction.getId())
+                    .name(user.getName())
+                    .currentBalance(user.getBalance())
+                    .transactionAmount(userTransaction.getTransactionAmount())
+                    .transactionDate(userTransaction.getTransactionDate())
+                    .build();
+            userTransactions.add(userTransactionDto);
+        }
+
+        return userTransactions;
+    }
+
+    @Override
+    public List<UserTransactionDto> doFindTransactionBetweenDates(String startDate,
+                                                                  String endDate) {
+        LocalDate startLocalDate = LocalDate.parse(startDate);
+        LocalDate endLocalDate = LocalDate.parse(endDate);
+
+        List<Transaction> transactions = transactionRepository
+                .findTransactionByCreatedAtAndTransactionDateBetween(startLocalDate, endLocalDate);
+        List<UserTransactionDto> userTransactions = new ArrayList<>();
+
+
+        for(Transaction userTransaction: transactions) {
+            User user = userRepository.findById(userTransaction.getUserId())
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with ID : "
+                            + userTransaction.getUserId()));
+
             UserTransactionDto userTransactionDto = UserTransactionDto.builder()
                     .id(userTransaction.getId())
                     .name(user.getName())

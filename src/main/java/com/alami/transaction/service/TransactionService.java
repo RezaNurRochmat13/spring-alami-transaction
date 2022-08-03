@@ -8,4 +8,6 @@ import java.util.List;
 public interface TransactionService {
     Transaction doSaveTransaction(Transaction transactionPayload);
     List<UserTransactionDto> doFindTransactionByUserId(Long userId);
+    List<UserTransactionDto> doFindTransactionBetweenDates(String startDate,
+                                                           String endDate);
 }

@@ -3,7 +3,7 @@ Alami Transaction REST API
 
 # Description
 Service for handling transaction usecase on Alami. 
-Built using Spring Boot, JPA Hibernate, Lombok, Postgres, H2, Flyway Migration, jUnit, Mockito
+Built using Spring Boot, JPA Hibernate, Lombok, Postgres, H2, Flyway Migration
 
 # Structure project
 * package controller => Handling presentation layer like request and response
@@ -13,6 +13,9 @@ Built using Spring Boot, JPA Hibernate, Lombok, Postgres, H2, Flyway Migration, 
 * package service => Handling business logic layer
 * package util/utility => Handling for class utility function like exception, auditing and many more
 * resources/db/migration => Handling for flyway migration database
+
+# API Documentation
+For API Docs you can navigate to this url `https://documenter.getpostman.com/view/16224468/UzkcTYzH`
 
 ### Reference Documentation
 For further reference, please consider the following sections:

@@ -30,11 +30,22 @@ public class TransactionController {
         }
     }
 
-    @GetMapping("transactions")
-    public ResponseEntity<Object> findUserTransaction(@RequestParam(value = "user_id", required = true) Long user_id) {
-        BaseResponseDto baseResponse = BaseResponseDto.builder()
-                .data(transactionService.doFindTransactionByUserId(user_id))
-                .build();
+    @GetMapping("transactions/history")
+    public ResponseEntity<Object> findUserTransaction(
+            @RequestParam(value = "user_id", required = false) Long user_id,
+            @RequestParam(value = "start_date", required = false) String start_date,
+            @RequestParam(value = "end_date", required = false) String end_date) {
+        BaseResponseDto baseResponse = null;
+
+        if(user_id != null) {
+            baseResponse = BaseResponseDto.builder()
+                    .data(transactionService.doFindTransactionByUserId(user_id))
+                    .build();
+        } else {
+            baseResponse = BaseResponseDto.builder()
+                    .data(transactionService.doFindTransactionBetweenDates(start_date, end_date))
+                    .build();
+        }
 
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);
     }
