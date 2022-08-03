@@ -1,5 +1,6 @@
 package com.alami.transaction.controller;
 
+import com.alami.transaction.dto.BaseResponseDto;
 import com.alami.transaction.entity.Transaction;
 import com.alami.transaction.service.TransactionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,22 @@ public class TransactionController {
         Transaction transaction = transactionService.doSaveTransaction(payload);
 
         if(transaction != null) {
-            return new ResponseEntity<>(transaction, HttpStatus.CREATED);
+            BaseResponseDto baseResponse = BaseResponseDto.builder()
+                    .data(transaction)
+                    .build();
+
+            return new ResponseEntity<>(baseResponse, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Not enough balance", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("transactions")
+    public ResponseEntity<Object> findUserTransaction(@RequestParam(value = "user_id", required = true) Long user_id) {
+        BaseResponseDto baseResponse = BaseResponseDto.builder()
+                .data(transactionService.doFindTransactionByUserId(user_id))
+                .build();
+
+        return new ResponseEntity<>(baseResponse, HttpStatus.OK);
     }
 }

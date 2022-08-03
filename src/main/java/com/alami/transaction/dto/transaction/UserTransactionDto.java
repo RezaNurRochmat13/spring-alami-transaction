@@ -13,7 +13,8 @@ import java.io.Serializable;
 public class UserTransactionDto implements Serializable {
     private Long id;
     private String name;
-    private Long balance;
+    @JsonProperty("current_balance")
+    private Long currentBalance;
     @JsonProperty("transaction_amount")
     private Long transactionAmount;
     @JsonProperty("transaction_date")

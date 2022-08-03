@@ -1,5 +1,6 @@
 package com.alami.transaction.service;
 
+import com.alami.transaction.dto.transaction.UserTransactionDto;
 import com.alami.transaction.entity.Transaction;
 import com.alami.transaction.entity.User;
 import com.alami.transaction.repository.TransactionRepository;
@@ -11,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -61,5 +65,28 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         return null;
+    }
+
+    @Override
+    public List<UserTransactionDto> doFindTransactionByUserId(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID : "
+                        + userId));
+        List<Transaction> transactions = transactionRepository.findTransactionByUserId(user.getId());
+        List<UserTransactionDto> userTransactions = new ArrayList<>();
+
+
+        for(Transaction userTransaction: transactions) {
+            UserTransactionDto userTransactionDto = UserTransactionDto.builder()
+                    .id(userTransaction.getId())
+                    .name(user.getName())
+                    .currentBalance(user.getBalance())
+                    .transactionAmount(userTransaction.getTransactionAmount())
+                    .transactionDate(userTransaction.getTransactionDate())
+                    .build();
+            userTransactions.add(userTransactionDto);
+        }
+
+        return userTransactions;
     }
 }
